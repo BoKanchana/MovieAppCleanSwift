@@ -33,10 +33,29 @@
                     <view key="view" contentMode="scaleToFill" id="Xz8-T0-5gB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="200" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="7AS-6D-h4D">
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Gf8-1e-rvL" id="dhy-Nm-DB3"/>
+                                    <outlet property="delegate" destination="Gf8-1e-rvL" id="VUb-8E-JkC"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="7AS-6D-h4D" firstAttribute="top" secondItem="Z4u-RM-5HS" secondAttribute="top" id="1bp-B6-aO8"/>
+                            <constraint firstItem="Z4u-RM-5HS" firstAttribute="trailing" secondItem="7AS-6D-h4D" secondAttribute="trailing" id="CcT-c7-aPs"/>
+                            <constraint firstItem="7AS-6D-h4D" firstAttribute="leading" secondItem="Z4u-RM-5HS" secondAttribute="leading" id="OX4-dx-99s"/>
+                            <constraint firstItem="Z4u-RM-5HS" firstAttribute="bottom" secondItem="7AS-6D-h4D" secondAttribute="bottom" id="wRc-VY-Zsm"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Z4u-RM-5HS"/>
                     </view>
                     <navigationItem key="navigationItem" id="yT4-qj-1ne"/>
+                    <connections>
+                        <outlet property="tableView" destination="7AS-6D-h4D" id="qEG-Mg-4C4"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LvK-yI-Ug7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -25,7 +25,14 @@ class MovieListPresenter: MovieListPresenterInterface {
       let title = movie.title
       let popularity = movie.popularity
       let voteCount = movie.voteCount
-      let voteAverage = movie.voteAverage
+      let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
+      let voteAverage: Double
+      if avg == 0 {
+        voteAverage = movie.voteAverage
+      } else {
+        let movieAverage = ((movie.voteCount * movie.voteAverage) + avg) / (movie.voteCount + 1)
+        voteAverage = round(movieAverage)
+      }
       let backdropPath = movie.backdropPath
       let posterPath = movie.posterPath
       let movieViewModel = MovieList.GetMovie.ViewModel.MovieViewModel(id: id, title: title, popularity: popularity, voteCount: voteCount, voteAverage: voteAverage, backdropPath: backdropPath, posterPath: posterPath)

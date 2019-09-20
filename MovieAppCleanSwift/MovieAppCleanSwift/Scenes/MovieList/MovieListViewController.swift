@@ -22,7 +22,9 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   var router: MovieListRouter!
   var movieViewModel: [MovieList.GetMovie.ViewModel.MovieViewModel] = []
   let sort: Sort = .desc
-
+  
+  @IBOutlet weak var tableView: UITableView!
+  
   // MARK: - Object lifecycle
 
   override func awakeFromNib() {
@@ -51,6 +53,11 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    let bundle = Bundle(for: MovieListTableViewCell.self)
+    let nib = UINib(nibName: "MovieListTableViewCell", bundle: bundle)
+    tableView.register(nib, forCellReuseIdentifier: "MovieListTableViewCell")
+    
     getMovies(sort: sort)
   }
 
@@ -74,7 +81,8 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
 
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel) {
     movieViewModel.append(contentsOf: viewModel.movieViewModels)
-    print("movies list: \(movieViewModel)")
+    tableView.reloadData()
+    print("movies list: \(movieViewModel.count)")
   }
 
   // MARK: - Router
@@ -86,5 +94,20 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   @IBAction func unwindToMovieListViewController(from segue: UIStoryboardSegue) {
     print("unwind...")
     router.passDataToNextScene(segue: segue)
+  }
+}
+
+extension MovieListViewController: UITableViewDataSource {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return movieViewModel.count
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: "MovieListTableViewCell", for: indexPath) as? MovieListTableViewCell else {
+      return UITableViewCell()
+    }
+    let viewModel = movieViewModel[indexPath.row]
+    cell.setupUI(viewModel: viewModel)
+    return cell
   }
 }
