@@ -9,5 +9,11 @@
 import Foundation
 
 class MovieDetailStore: MovieDetailStoreProtocol {
-  
+  func getMovieDetail(id: Int, _ completion: @escaping (Result<MovieDescription, APIError>) -> Void) {
+    APIManager().getMovieDetail(id: id) { (result) in
+      DispatchQueue.main.sync {
+        completion(result)
+      }
+    }
+  }
 }

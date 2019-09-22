@@ -20,6 +20,7 @@ enum Flag: String {
 
 protocol MovieListViewControllerInterface: class {
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel)
+  func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel)
 }
 
 class MovieListViewController: UIViewController, MovieListViewControllerInterface {
@@ -121,6 +122,10 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     movieViewModel.append(contentsOf: viewModel.movieViewModels)
     tableView.reloadData()
   }
+  
+  func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel) {
+    router.navigateToMovieDetail()
+  }
 
   // MARK: - Router
 
@@ -157,6 +162,11 @@ extension MovieListViewController: UITableViewDataSource {
 }
 
 extension MovieListViewController: UITableViewDelegate {
+  func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let request = MovieList.SetIdMovie.Request(id: movieViewModel[indexPath.row].id)
+    interactor.setIdMovie(request: request)
+  }
+  
   override func viewWillAppear(_ animated: Bool) {
     self.tableView.reloadData()
   }

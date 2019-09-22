@@ -32,4 +32,16 @@ struct MovieList {
     }
   }
   
+  struct SetIdMovie {
+    struct Request {
+      let id: Int
+    }
+    struct Response {
+      
+    }
+    struct ViewModel {
+      
+    }
+  }
+  
 }

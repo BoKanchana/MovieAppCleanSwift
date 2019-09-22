@@ -10,6 +10,7 @@ import UIKit
 
 protocol MovieListPresenterInterface {
   func presentMovieList(response: MovieList.GetMovie.Response)
+  func setIdMovie(response: MovieList.SetIdMovie.Response)
 }
 
 class MovieListPresenter: MovieListPresenterInterface {
@@ -25,6 +26,9 @@ class MovieListPresenter: MovieListPresenterInterface {
       let title = movie.title
       let popularity = movie.popularity
       let voteCount = movie.voteCount
+      let backdropPath = movie.backdropPath
+      let posterPath = movie.posterPath
+    
       let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
       let voteAverage: Double
       if avg == 0 {
@@ -33,13 +37,16 @@ class MovieListPresenter: MovieListPresenterInterface {
         let movieAverage = ((movie.voteCount * movie.voteAverage) + avg) / (movie.voteCount + 1)
         voteAverage = round(movieAverage)
       }
-      let backdropPath = movie.backdropPath
-      let posterPath = movie.posterPath
       let movieViewModel = MovieList.GetMovie.ViewModel.MovieViewModel(id: id, title: title, popularity: popularity, voteCount: voteCount, voteAverage: voteAverage, backdropPath: backdropPath, posterPath: posterPath)
       moviesViewModel.append(movieViewModel)
     }
     let viewModel = MovieList.GetMovie.ViewModel(movieViewModels: moviesViewModel)
     viewController.displayMovies(viewModel: viewModel)
+  }
+  
+  func setIdMovie(response: MovieList.SetIdMovie.Response) {
+    let viewModel = MovieList.SetIdMovie.ViewModel()
+    viewController.displayIdMovie(viewModel: viewModel)
   }
   
 }

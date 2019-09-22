@@ -55,3 +55,53 @@ struct Movie: Codable {
     case posterPath = "poster_path"
   }
 }
+
+struct MovieDescription: Codable {
+  var adult: Bool
+  var backdropPath: String?
+  var belongsToCollection: String?
+  var budget: Int
+  var genres: [genres]
+  var homepage: String?
+  var id: Int
+  var imdbId: String?
+  var originalLanguage: String?
+  var originalTitle: String
+  var overview: String
+  var popularity: Double
+  var posterPath: String?
+  var releaseDate: String
+  var revenue: Int
+  var status: String
+  var title: String
+  var voteCount: Double
+  var voteAverage: Double
+
+  private enum CodingKeys: String, CodingKey {
+    case adult
+    case backdropPath = "backdrop_path"
+    case belongsToCollection = "belongs_to_collection"
+    case budget
+    case genres
+    case homepage
+    case id
+    case imdbId = "imdb_id"
+    case originalLanguage = "original_language"
+    case originalTitle = "original_title"
+    case overview
+    case popularity
+    case posterPath = "poster_path"
+    case releaseDate = "release_date"
+    case revenue = "revenue"
+    case status
+    case title
+    case voteCount = "vote_count"
+    case voteAverage = "vote_average"
+
+  }
+}
+
+struct genres: Codable {
+  var id: Int
+  var name: String
+}

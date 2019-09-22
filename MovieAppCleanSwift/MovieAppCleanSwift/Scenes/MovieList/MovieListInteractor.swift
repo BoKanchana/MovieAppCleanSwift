@@ -10,14 +10,18 @@ import UIKit
 
 protocol MovieListInteractorInterface {
   func getMovies(request: MovieList.GetMovie.Request)
+  func setIdMovie(request: MovieList.SetIdMovie.Request)
+  var id: Int? { get }
   var error: String { get }
 }
 
 class MovieListInteractor: MovieListInteractorInterface {
+  
   var presenter: MovieListPresenterInterface!
   var worker: MovieListWorker?
   var error: String = ""
   var page: Int = 1
+  var id: Int?
   
 
   // MARK: - Business logic
@@ -38,6 +42,12 @@ class MovieListInteractor: MovieListInteractorInterface {
         self.error = error.localizedDescription
       }
     }
+  }
+  
+  func setIdMovie(request: MovieList.SetIdMovie.Request) {
+    id = request.id
+    let resposne = MovieList.SetIdMovie.Response()
+    presenter.setIdMovie(response: resposne)
   }
   
 }

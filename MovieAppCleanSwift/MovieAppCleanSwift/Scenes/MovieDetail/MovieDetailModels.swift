@@ -9,13 +9,39 @@
 import UIKit
 
 struct MovieDetail {
-  /// This structure represents a use case
-  struct Something {
-    /// Data struct sent to Interactor
-    struct Request {}
-    /// Data struct sent to Presenter
-    struct Response {}
-    /// Data struct sent to ViewController
-    struct ViewModel {}
+  
+  struct GetMovieDetail {
+    
+    struct Request {
+      
+    }
+    struct Response {
+      var movieDetail: MovieDescription
+    }
+    struct ViewModel {
+      struct genreCollection {
+        var name: String
+      }
+      var id: Int
+      var title: String
+      var overview: String
+      var originalLanguage: String
+      var voteAverage: Double
+      var collection: [genreCollection]
+      var posterPath: String
+    }
+  }
+  
+  struct SetUserVoting {
+    struct Request {
+      var id: Int
+      var voting: Double
+    }
+    struct Response {
+      
+    }
+    struct ViewModel {
+      
+    }
   }
 }

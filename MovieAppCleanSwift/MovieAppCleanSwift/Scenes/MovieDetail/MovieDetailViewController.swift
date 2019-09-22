@@ -7,15 +7,27 @@
 //
 
 import UIKit
+import Cosmos
 
 protocol MovieDetailViewControllerInterface: class {
-  func displaySomething(viewModel: MovieDetail.Something.ViewModel)
+  func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel)
+  func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel)
 }
 
 class MovieDetailViewController: UIViewController, MovieDetailViewControllerInterface {
+  
   var interactor: MovieDetailInteractorInterface!
   var router: MovieDetailRouter!
-
+  var id: Int?
+  var vote: Double?
+  let baseUrl: String = "https://image.tmdb.org/t/p/original"
+  @IBOutlet weak var posterImage: UIImageView!
+  @IBOutlet weak var titleLabel: UILabel!
+  @IBOutlet weak var overviewLabel: UILabel!
+  @IBOutlet weak var genreLabel: UILabel!
+  @IBOutlet weak var languageLabel: UILabel!
+  @IBOutlet weak var starVotingView: CosmosView!
+  
   // MARK: - Object lifecycle
 
   override func awakeFromNib() {
@@ -44,23 +56,61 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    getMovieDetail()
+  }
+  
+  override func viewDidDisappear(_ animated: Bool) {
+    super.viewDidDisappear(true)
+    if let id = id, let vote = vote {
+      setVoting(id: id, vote: vote)
+    }
   }
 
   // MARK: - Event handling
 
-  func doSomethingOnLoad() {
-    // NOTE: Ask the Interactor to do some work
-
-    let request = MovieDetail.Something.Request()
+  func getMovieDetail() {
+    let request = MovieDetail.GetMovieDetail.Request()
+    interactor.getMovieDetail(request: request)
+  }
+  
+  func setVoting(id: Int, vote: Double) {
+    let request = MovieDetail.SetUserVoting.Request(id: id, voting: vote)
+    self.interactor.setUserVoting(request: request)
   }
 
   // MARK: - Display logic
 
-  func displaySomething(viewModel: MovieDetail.Something.ViewModel) {
-    // NOTE: Display the result from the Presenter
-
-    // nameTextField.text = viewModel.name
+  func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel) {
+    let posterPath = viewModel.posterPath
+    let posterURL = URL(string: "\(baseUrl)\(posterPath)")
+    posterImage.kf.setImage(with: posterURL)
+    
+    self.id = viewModel.id
+    titleLabel.text = viewModel.title
+    overviewLabel.text = viewModel.overview
+    languageLabel.text = viewModel.originalLanguage
+    
+    var genres: String = ""
+    for index in viewModel.collection {
+      genres.append(contentsOf: "\(index.name) ")
+    }
+    genreLabel.text = genres
+    starVotingView.rating = viewModel.voteAverage
+    setStarforVoting()
+  }
+  
+  func setStarforVoting() {
+    starVotingView.settings.minTouchRating = 0
+    starVotingView.settings.fillMode = .half
+    starVotingView.settings.totalStars = 5
+    
+    starVotingView.didFinishTouchingCosmos = { rating in
+      self.vote = rating * 2
+    }
+  }
+  
+  func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel) {
+    
   }
 
   // MARK: - Router

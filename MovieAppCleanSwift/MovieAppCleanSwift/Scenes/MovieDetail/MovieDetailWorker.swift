@@ -9,7 +9,7 @@
 import UIKit
 
 protocol MovieDetailStoreProtocol {
-  
+  func getMovieDetail(id: Int, _ completion: @escaping (Result<MovieDescription, APIError>) -> Void)
 }
 
 class MovieDetailWorker {
@@ -22,4 +22,9 @@ class MovieDetailWorker {
 
   // MARK: - Business Logic
 
+  func getMovieDetail(id: Int, _ completion: @escaping (Result<MovieDescription, APIError>) -> Void) {
+    store.getMovieDetail(id: id) { result in
+      completion(result)
+    }
+  }
 }
