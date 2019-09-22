@@ -18,7 +18,7 @@ class MovieListPresenter: MovieListPresenterInterface {
   // MARK: - Presentation logic
   
   func presentMovieList(response: MovieList.GetMovie.Response) {
-    let movies = response.listMovies.results
+    let movies = response.listMovies
     var moviesViewModel: [MovieList.GetMovie.ViewModel.MovieViewModel] = []
     for movie in movies {
       let id = movie.id

@@ -13,9 +13,10 @@ struct MovieList {
   struct GetMovie {
     struct Request {
       let sort: String
+      let flag: String
     }
     struct Response {
-      let listMovies: ListMovie
+      let listMovies: [Movie]
     }
     struct ViewModel {
       struct MovieViewModel {

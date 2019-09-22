@@ -8,9 +8,14 @@
 
 import UIKit
 
-enum Sort {
-  case desc
-  case asc
+enum Sort: String {
+  case desc = "release_date.desc"
+  case asc = "release_date.asc"
+}
+
+enum Flag: String {
+  case refresh
+  case loadmore
 }
 
 protocol MovieListViewControllerInterface: class {
@@ -21,10 +26,40 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   var interactor: MovieListInteractorInterface!
   var router: MovieListRouter!
   var movieViewModel: [MovieList.GetMovie.ViewModel.MovieViewModel] = []
-  let sort: Sort = .desc
+  var flag: String = Flag.loadmore.rawValue
+  var sort: String = Sort.desc.rawValue
   
   @IBOutlet weak var tableView: UITableView!
   
+  lazy var refreshControl: UIRefreshControl = {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action:
+      #selector(MovieListViewController.handleRefresh(_:)),
+                             for: UIControl.Event.valueChanged)
+    refreshControl.tintColor = UIColor.gray
+    
+    return refreshControl
+  }()
+  
+  @IBAction func sortButton(_ sender: Any) {
+    let optionMenu = UIAlertController(title: "Sort by relase date", message: "Choose Option", preferredStyle: .actionSheet)
+    
+    let ascending = UIAlertAction(title: "ASC", style: .default, handler: { _ in
+      self.sort = Sort.asc.rawValue
+      self.sortMovieList(sort: self.sort)
+    })
+    let descending = UIAlertAction(title: "DESC", style: .default, handler: { _ in
+      self.sort = Sort.desc.rawValue
+      self.sortMovieList(sort: self.sort)
+    })
+    let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+    
+    optionMenu.addAction(descending)
+    optionMenu.addAction(ascending)
+    optionMenu.addAction(cancelAction)
+    
+    self.present(optionMenu, animated: true, completion: nil)
+  }
   // MARK: - Object lifecycle
 
   override func awakeFromNib() {
@@ -58,23 +93,26 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     let nib = UINib(nibName: "MovieListTableViewCell", bundle: bundle)
     tableView.register(nib, forCellReuseIdentifier: "MovieListTableViewCell")
     
-    getMovies(sort: sort)
+    getMovies(sort: sort, flag: flag)
   }
 
   // MARK: - Event handling
 
-  func getMovies(sort: Sort) {
-    let sortType: String
-    
-    switch sort {
-    case .desc:
-      sortType = "release_date.desc"
-    case .asc:
-      sortType = "release_date.asc"
-    }
-    
-    let request = MovieList.GetMovie.Request(sort: sortType)
+  func getMovies(sort: String, flag: String) {
+    let request = MovieList.GetMovie.Request(sort: sort, flag: flag)
     interactor.getMovies(request: request)
+  }
+  
+  @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+    let flag = Flag.refresh.rawValue
+    getMovies(sort: sort, flag: flag)
+    refreshControl.endRefreshing()
+  }
+  
+  func sortMovieList(sort: String) {
+    self.movieViewModel = []
+    self.flag = Flag.refresh.rawValue
+    self.getMovies(sort: sort, flag: self.flag)
   }
 
   // MARK: - Display logic
@@ -82,7 +120,6 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel) {
     movieViewModel.append(contentsOf: viewModel.movieViewModels)
     tableView.reloadData()
-    print("movies list: \(movieViewModel.count)")
   }
 
   // MARK: - Router
@@ -109,5 +146,18 @@ extension MovieListViewController: UITableViewDataSource {
     let viewModel = movieViewModel[indexPath.row]
     cell.setupUI(viewModel: viewModel)
     return cell
+  }
+  
+  func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    if indexPath.row == movieViewModel.count - 1 {
+      flag = Flag.loadmore.rawValue
+      getMovies(sort: sort, flag: flag)
+    }
+  }
+}
+
+extension MovieListViewController: UITableViewDelegate {
+  override func viewWillAppear(_ animated: Bool) {
+    self.tableView.reloadData()
   }
 }

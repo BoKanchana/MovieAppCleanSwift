@@ -52,7 +52,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Z4u-RM-5HS"/>
                     </view>
-                    <navigationItem key="navigationItem" id="yT4-qj-1ne"/>
+                    <navigationItem key="navigationItem" id="yT4-qj-1ne">
+                        <barButtonItem key="rightBarButtonItem" title="Sort" id="5W9-dt-tFg">
+                            <connections>
+                                <action selector="sortButton:" destination="Gf8-1e-rvL" id="2vk-Ym-007"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="7AS-6D-h4D" id="qEG-Mg-4C4"/>
                     </connections>
@@ -60,6 +66,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LvK-yI-Ug7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-538" y="67"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="vCo-2G-b5U">
+            <objects>
+                <viewController id="eGl-NA-PDS" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="bMj-Fh-YfQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Wxj-S2-Bh1"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wqI-8I-Wa5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="404" y="67"/>
         </scene>
     </scenes>
 </document>

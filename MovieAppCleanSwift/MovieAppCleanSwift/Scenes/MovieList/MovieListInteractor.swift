@@ -10,14 +10,12 @@ import UIKit
 
 protocol MovieListInteractorInterface {
   func getMovies(request: MovieList.GetMovie.Request)
-  var listMovie: ListMovie? { get }
   var error: String { get }
 }
 
 class MovieListInteractor: MovieListInteractorInterface {
   var presenter: MovieListPresenterInterface!
   var worker: MovieListWorker?
-  var listMovie: ListMovie?
   var error: String = ""
   var page: Int = 1
   
@@ -25,12 +23,17 @@ class MovieListInteractor: MovieListInteractorInterface {
   // MARK: - Business logic
 
   func getMovies(request: MovieList.GetMovie.Request) {
+    if request.flag == "refresh" {
+      page = 1
+    }
+    
     worker?.getMovies(page: page, sort: request.sort) { result in
       switch result {
       case .success(let listMovie):
-        self.listMovie = listMovie
-        let response = MovieList.GetMovie.Response(listMovies: listMovie)
+        let response = MovieList.GetMovie.Response(listMovies: listMovie.results)
         self.presenter.presentMovieList(response: response)
+        self.page += 1
+        print("page: \(self.page)")
       case .failure(let error):
         self.error = error.localizedDescription
       }
