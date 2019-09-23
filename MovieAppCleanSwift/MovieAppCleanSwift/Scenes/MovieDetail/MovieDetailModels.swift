@@ -42,8 +42,7 @@ struct MovieDetail {
       var voteAverageApi: Double
     }
     struct Response {
-      var id: Int
-      var voteAverage: Double
+      
     }
     struct ViewModel {
       

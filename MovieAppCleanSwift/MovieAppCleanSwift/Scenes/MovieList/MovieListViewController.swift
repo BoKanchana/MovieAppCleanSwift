@@ -8,16 +8,6 @@
 
 import UIKit
 
-enum Sort: String {
-  case desc = "release_date.desc"
-  case asc = "release_date.asc"
-}
-
-enum Flag: String {
-  case refresh
-  case loadmore
-}
-
 protocol MovieListViewControllerInterface: class {
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel)
   func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel)
@@ -31,16 +21,6 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   var sort: String = Sort.desc.rawValue
   
   @IBOutlet weak var tableView: UITableView!
-  
-  lazy var refreshControl: UIRefreshControl = {
-    let refreshControl = UIRefreshControl()
-    refreshControl.addTarget(self, action:
-      #selector(MovieListViewController.handleRefresh(_:)),
-                             for: UIControl.Event.valueChanged)
-    refreshControl.tintColor = UIColor.gray
-    
-    return refreshControl
-  }()
   
   @IBAction func sortButton(_ sender: Any) {
     let optionMenu = UIAlertController(title: "Sort by relase date", message: "Choose Option", preferredStyle: .actionSheet)
@@ -95,6 +75,7 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     tableView.register(nib, forCellReuseIdentifier: "MovieListTableViewCell")
     
     getMovies(sort: sort, flag: flag)
+    pullToRefresh()
   }
 
   // MARK: - Event handling
@@ -104,16 +85,25 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     interactor.getMovies(request: request)
   }
   
-  @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
-    let flag = Flag.refresh.rawValue
-    getMovies(sort: sort, flag: flag)
-    refreshControl.endRefreshing()
-  }
-  
   func sortMovieList(sort: String) {
     self.movieViewModel = []
     self.flag = Flag.refresh.rawValue
     self.getMovies(sort: sort, flag: self.flag)
+  }
+  
+  func pullToRefresh() {
+    let refreshControl = UIRefreshControl()
+    refreshControl.addTarget(self, action:
+      #selector(MovieListViewController.handleRefresh(_:)),
+                             for: UIControl.Event.valueChanged)
+    refreshControl.tintColor = UIColor.gray
+    tableView.addSubview(refreshControl)
+  }
+  
+  @objc func handleRefresh(_ refreshControl: UIRefreshControl) {
+    let flag = Flag.refresh.rawValue
+    getMovies(sort: sort, flag: flag)
+    refreshControl.endRefreshing()
   }
 
   // MARK: - Display logic
@@ -160,10 +150,6 @@ extension MovieListViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let request = MovieList.SetIdMovie.Request(id: movieViewModel[indexPath.row].id)
     interactor.setIdMovie(request: request)
-  }
-  
-  override func viewWillAppear(_ animated: Bool) {
-    
   }
 }
 

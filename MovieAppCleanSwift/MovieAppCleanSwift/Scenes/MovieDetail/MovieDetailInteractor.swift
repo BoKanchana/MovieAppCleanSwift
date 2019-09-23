@@ -48,11 +48,16 @@ class MovieDetailInteractor: MovieDetailInteractorInterface {
     let id = request.id
     let voteCount = request.voteCount
     let voteAverageApi = request.voteAverageApi
-    UserDefaults.standard.set(voting, forKey: "\(id)")
-    let voteAverage = ((voteCount * voteAverageApi) + voting) / (voteCount + 1)
-    delegate?.reloadTable(id: id, voteAverage: voteAverage)
     
-    let response = MovieDetail.SetUserVoting.Response(id: id, voteAverage: voteAverage)
+    UserDefaults.standard.set(voting, forKey: "\(id)")
+    
+    let voteAverage = ((voteCount * voteAverageApi) + voting) / (voteCount + 1)
+    let multiplier = pow(10.0, 2.0)
+    let roundedVoteAverage = round(voteAverage * multiplier) / multiplier
+    
+    delegate?.reloadTable(id: id, voteAverage: roundedVoteAverage)
+    
+    let response = MovieDetail.SetUserVoting.Response()
     presenter.presentUserVoting(response: response)
   }
   

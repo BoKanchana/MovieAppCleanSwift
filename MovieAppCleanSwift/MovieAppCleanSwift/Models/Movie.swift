@@ -105,3 +105,14 @@ struct genres: Codable {
   var id: Int
   var name: String
 }
+
+
+enum Sort: String {
+  case desc = "release_date.desc"
+  case asc = "release_date.asc"
+}
+
+enum Flag: String {
+  case refresh
+  case loadmore
+}
