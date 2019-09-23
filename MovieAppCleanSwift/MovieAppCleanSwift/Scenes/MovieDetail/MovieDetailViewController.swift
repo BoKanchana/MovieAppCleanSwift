@@ -14,12 +14,13 @@ protocol MovieDetailViewControllerInterface: class {
   func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel)
 }
 
+
 class MovieDetailViewController: UIViewController, MovieDetailViewControllerInterface {
   
   var interactor: MovieDetailInteractorInterface!
   var router: MovieDetailRouter!
-  var id: Int?
   var vote: Double?
+  var movieDetailViewModel: MovieDetail.GetMovieDetail.ViewModel?
   let baseUrl: String = "https://image.tmdb.org/t/p/original"
   @IBOutlet weak var posterImage: UIImageView!
   @IBOutlet weak var titleLabel: UILabel!
@@ -61,9 +62,7 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(true)
-    if let id = id, let vote = vote {
-      setVoting(id: id, vote: vote)
-    }
+    setVoting()
   }
 
   // MARK: - Event handling
@@ -73,9 +72,14 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
     interactor.getMovieDetail(request: request)
   }
   
-  func setVoting(id: Int, vote: Double) {
-    let request = MovieDetail.SetUserVoting.Request(id: id, voting: vote)
-    self.interactor.setUserVoting(request: request)
+  func setVoting() {
+    let id = movieDetailViewModel?.id
+    let voteCount = movieDetailViewModel?.voteCount
+    let voteAverageApi = movieDetailViewModel?.voteAverageApi
+    if let id = id, let vote = vote, let voteCount = voteCount, let voteAverageApi = voteAverageApi {
+      let request = MovieDetail.SetUserVoting.Request(id: id, voting: vote, voteCount: voteCount, voteAverageApi: voteAverageApi)
+      self.interactor.setUserVoting(request: request)
+    }
   }
 
   // MARK: - Display logic
@@ -85,7 +89,7 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
     let posterURL = URL(string: "\(baseUrl)\(posterPath)")
     posterImage.kf.setImage(with: posterURL)
     
-    self.id = viewModel.id
+    self.movieDetailViewModel = viewModel
     titleLabel.text = viewModel.title
     overviewLabel.text = viewModel.overview
     languageLabel.text = viewModel.originalLanguage

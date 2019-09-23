@@ -29,6 +29,8 @@ struct MovieDetail {
       var voteAverage: Double
       var collection: [genreCollection]
       var posterPath: String
+      var voteCount: Double
+      var voteAverageApi: Double
     }
   }
   
@@ -36,9 +38,12 @@ struct MovieDetail {
     struct Request {
       var id: Int
       var voting: Double
+      var voteCount: Double
+      var voteAverageApi: Double
     }
     struct Response {
-      
+      var id: Int
+      var voteAverage: Double
     }
     struct ViewModel {
       

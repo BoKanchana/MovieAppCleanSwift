@@ -28,6 +28,8 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
     let overview = movie.overview
     let originalLanguage = movie.originalLanguage ?? " - "
     let posterPath = movie.posterPath ??  " - "
+    let voteCount = movie.voteCount
+    let voteAverageApi = movie.voteAverage
     
     let voteAverage: Double
     let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
@@ -49,7 +51,9 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
                                                          originalLanguage: originalLanguage,
                                                          voteAverage: voteAverage,
                                                          collection: collection,
-                                                         posterPath: posterPath)
+                                                         posterPath: posterPath,
+                                                         voteCount: voteCount,
+                                                         voteAverageApi: voteAverageApi)
     viewController.displayMovieDetail(viewModel: viewModel)
   }
   

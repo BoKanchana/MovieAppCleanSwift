@@ -132,11 +132,6 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     router.passDataToNextScene(segue: segue)
   }
-
-  @IBAction func unwindToMovieListViewController(from segue: UIStoryboardSegue) {
-    print("unwind...")
-    router.passDataToNextScene(segue: segue)
-  }
 }
 
 extension MovieListViewController: UITableViewDataSource {
@@ -168,6 +163,17 @@ extension MovieListViewController: UITableViewDelegate {
   }
   
   override func viewWillAppear(_ animated: Bool) {
-    self.tableView.reloadData()
+    
+  }
+}
+
+extension MovieListViewController: ReloadTable {
+  func reloadTable(id: Int, voteAverage: Double) {
+    for (index, value) in movieViewModel.enumerated() {
+      if id == value.id {
+        movieViewModel[index].voteAverage = voteAverage
+      }
+    }
+    tableView.reloadData()
   }
 }

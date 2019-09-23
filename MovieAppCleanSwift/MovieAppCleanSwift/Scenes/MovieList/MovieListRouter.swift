@@ -37,6 +37,7 @@ class MovieListRouter: MovieListRouterInput {
     }
     
     movieDetailViewController.interactor.id = viewController.interactor.id
+    movieDetailViewController.interactor.delegate = viewController
 
     // let someWhereViewController = segue.destinationViewController as! SomeWhereViewController
     // someWhereViewController.interactor.model = viewController.interactor.model

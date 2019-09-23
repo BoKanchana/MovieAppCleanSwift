@@ -24,7 +24,7 @@ struct MovieList {
         let title: String
         let popularity: Double
         let voteCount: Double
-        let voteAverage: Double
+        var voteAverage: Double
         let backdropPath: String?
         let posterPath: String?
       }

@@ -15,7 +15,6 @@ enum APIError: Error {
 
 class APIManager {
   let apiKey: String = "328c283cd27bd1877d9080ccb1604c91"
-  // please use baseURL
   let baseUrl: String = "https://api.themoviedb.org/3"
   
   func getMoviesList(page: Int, sort: String, completion: @escaping(Result<ListMovie, APIError>) -> Void) {
