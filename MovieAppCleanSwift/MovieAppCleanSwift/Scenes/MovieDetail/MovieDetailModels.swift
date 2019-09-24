@@ -19,15 +19,12 @@ struct MovieDetail {
       var movieDetail: MovieDescription
     }
     struct ViewModel {
-      struct genreCollection {
-        var name: String
-      }
       var id: Int
       var title: String
       var overview: String
       var originalLanguage: String
       var voteAverage: Double
-      var collection: [genreCollection]
+      var collection: String
       var posterPath: String
       var voteCount: Double
       var voteAverageApi: Double

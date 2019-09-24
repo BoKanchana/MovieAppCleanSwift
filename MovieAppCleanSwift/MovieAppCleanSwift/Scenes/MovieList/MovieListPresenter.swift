@@ -35,7 +35,8 @@ class MovieListPresenter: MovieListPresenterInterface {
         voteAverage = movie.voteAverage
       } else {
         let movieAverage = ((movie.voteCount * movie.voteAverage) + avg) / (movie.voteCount + 1)
-        voteAverage = round(movieAverage)
+        let multiplier = pow(10.0, 2.0)
+        voteAverage = round(movieAverage * multiplier) / multiplier
       }
       let movieViewModel = MovieList.GetMovie.ViewModel.MovieViewModel(id: id,
                                                                        title: title,

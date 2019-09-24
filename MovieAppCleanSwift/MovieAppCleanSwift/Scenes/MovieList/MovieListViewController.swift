@@ -39,7 +39,7 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     optionMenu.addAction(ascending)
     optionMenu.addAction(cancelAction)
     
-    self.present(optionMenu, animated: true, completion: nil)
+    present(optionMenu, animated: true, completion: nil)
   }
   // MARK: - Object lifecycle
 

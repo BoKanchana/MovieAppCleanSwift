@@ -30,6 +30,7 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
     let posterPath = movie.posterPath ??  " - "
     let voteCount = movie.voteCount
     let voteAverageApi = movie.voteAverage
+    let collection = movie.genres.map { ($0.name) }.joined(separator: ", ")
     
     let voteAverage: Double
     let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
@@ -39,12 +40,6 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
       voteAverage = avg / 2
     }
     
-    var collection: [MovieDetail.GetMovieDetail.ViewModel.genreCollection] = []
-    for genre in movie.genres {
-      let name = genre.name
-      let gen = MovieDetail.GetMovieDetail.ViewModel.genreCollection(name: name)
-      collection.append(gen)
-    }
     let viewModel = MovieDetail.GetMovieDetail.ViewModel(id: id,
                                                          title: title,
                                                          overview: overview,

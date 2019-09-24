@@ -85,21 +85,18 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   // MARK: - Display logic
 
   func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel) {
+    self.movieDetailViewModel = viewModel
+    
     let posterPath = viewModel.posterPath
     let posterURL = URL(string: "\(baseUrl)\(posterPath)")
-    posterImage.kf.setImage(with: posterURL)
     
-    self.movieDetailViewModel = viewModel
+    posterImage.kf.setImage(with: posterURL)
     titleLabel.text = viewModel.title
     overviewLabel.text = viewModel.overview
     languageLabel.text = viewModel.originalLanguage
-    
-    var genres: String = ""
-    for index in viewModel.collection {
-      genres.append(contentsOf: "\(index.name) ")
-    }
-    genreLabel.text = genres
+    genreLabel.text = viewModel.collection
     starVotingView.rating = viewModel.voteAverage
+    
     setStarforVoting()
   }
   
@@ -108,8 +105,8 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
     starVotingView.settings.fillMode = .half
     starVotingView.settings.totalStars = 5
     
-    starVotingView.didFinishTouchingCosmos = { rating in
-      self.vote = rating * 2
+    starVotingView.didFinishTouchingCosmos = { [weak self] rating in
+      self?.vote = rating * 2
     }
   }
   
