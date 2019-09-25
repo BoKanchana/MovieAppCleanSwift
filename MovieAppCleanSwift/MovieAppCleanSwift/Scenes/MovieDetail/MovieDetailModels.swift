@@ -17,6 +17,9 @@ struct MovieDetail {
     }
     struct Response {
       var movieDetail: MovieDescription
+      struct HandleError {
+        var error: String
+      }
     }
     struct ViewModel {
       var id: Int
@@ -28,6 +31,10 @@ struct MovieDetail {
       var posterPath: String
       var voteCount: Double
       var voteAverageApi: Double
+      
+      struct HandleError {
+        var errorMessage: String
+      }
     }
   }
   

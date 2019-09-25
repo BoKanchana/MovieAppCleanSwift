@@ -12,6 +12,7 @@ import Cosmos
 protocol MovieDetailViewControllerInterface: class {
   func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel)
   func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel)
+  func displayHandleErrorAlert(viewModel: MovieDetail.GetMovieDetail.ViewModel.HandleError)
 }
 
 
@@ -112,6 +113,14 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   
   func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel) {
     
+  }
+  
+  func displayHandleErrorAlert(viewModel: MovieDetail.GetMovieDetail.ViewModel.HandleError) {
+    let alert = UIAlertController(title: "Error", message: viewModel.errorMessage, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action) in
+      self.dismiss(animated: true, completion: nil)
+    }))
+    self.present(alert, animated: true)
   }
 
   // MARK: - Router

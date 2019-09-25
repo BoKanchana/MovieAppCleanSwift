@@ -33,10 +33,12 @@ class MovieDetailInteractor: MovieDetailInteractorInterface {
       worker?.getMovieDetail(id: id) { [weak self] result in
         switch result {
         case .success(let movieDetail):
-          
           let response = MovieDetail.GetMovieDetail.Response(movieDetail: movieDetail)
           self?.presenter.presentMovieDetail(response: response)
         case .failure(let error):
+          let error = error.localizedDescription
+          let response = MovieDetail.GetMovieDetail.Response.HandleError(error: error)
+          self?.presenter.presentHandleError(response: response)
           print("error: \(error)")
         }
       }

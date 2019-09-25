@@ -11,6 +11,7 @@ import UIKit
 protocol MovieDetailPresenterInterface {
   func presentMovieDetail(response: MovieDetail.GetMovieDetail.Response)
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response)
+  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError)
 }
 
 class MovieDetailPresenter: MovieDetailPresenterInterface {
@@ -30,7 +31,7 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
     let posterPath = movie.posterPath ??  " - "
     let voteCount = movie.voteCount
     let voteAverageApi = movie.voteAverage
-    let collection = movie.genres.map { ($0.name) }.joined(separator: ", ")
+    let collection = movie.genres.map { $0.name }.joined(separator: ", ")
     
     let voteAverage: Double
     let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
@@ -50,6 +51,11 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
                                                          voteCount: voteCount,
                                                          voteAverageApi: voteAverageApi)
     viewController.displayMovieDetail(viewModel: viewModel)
+  }
+  
+  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError) {
+    let viewModel = MovieDetail.GetMovieDetail.ViewModel.HandleError(errorMessage: response.error)
+    viewController.displayHandleErrorAlert(viewModel: viewModel)
   }
   
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response) {
