@@ -11,6 +11,7 @@ import UIKit
 protocol MovieListViewControllerInterface: class {
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel)
   func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel)
+//  func displayHandleErrorAlert(viewModel: MovieList.GetMovie.ViewModel.HandleError)
 }
 
 class MovieListViewController: UIViewController, MovieListViewControllerInterface {
@@ -109,12 +110,26 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   // MARK: - Display logic
 
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel) {
-    movieViewModel.append(contentsOf: viewModel.movieViewModels)
-    tableView.reloadData()
+    let result = viewModel.viewModel
+    switch result {
+    case .success(let listMovie):
+      self.movieViewModel.append(contentsOf: listMovie)
+      tableView.reloadData()
+    case .failure(let error):
+      displayHandleErrorAlert(error: error.errorMessage)
+    }
   }
   
   func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel) {
     router.navigateToMovieDetail()
+  }
+  
+  func displayHandleErrorAlert(error: String) {
+    let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action) in
+      self.dismiss(animated: true, completion: nil)
+    }))
+    self.present(alert, animated: true)
   }
 
   // MARK: - Router

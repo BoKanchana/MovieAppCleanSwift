@@ -16,7 +16,7 @@ struct MovieList {
       let flag: String
     }
     struct Response {
-      let listMovies: [Movie]
+      let result: Result<[Movie], APIError>
     }
     struct ViewModel {
       struct MovieViewModel {
@@ -28,7 +28,12 @@ struct MovieList {
         let backdropPath: String?
         let posterPath: String?
       }
-      var movieViewModels: [MovieViewModel]
+      
+      struct HandleError: Error {
+        let errorMessage: String
+      }
+      
+      let viewModel: Result<[MovieViewModel], HandleError>
     }
   }
   

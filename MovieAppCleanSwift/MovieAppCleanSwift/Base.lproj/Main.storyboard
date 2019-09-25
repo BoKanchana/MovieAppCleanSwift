@@ -111,6 +111,7 @@
                                                         <constraints>
                                                             <constraint firstItem="xsB-sp-PeG" firstAttribute="centerX" secondItem="5nb-4t-Rcj" secondAttribute="centerX" id="9Lh-fD-xy1"/>
                                                             <constraint firstItem="xsB-sp-PeG" firstAttribute="top" secondItem="5nb-4t-Rcj" secondAttribute="top" id="PqC-iz-1uK"/>
+                                                            <constraint firstItem="xsB-sp-PeG" firstAttribute="centerX" secondItem="5nb-4t-Rcj" secondAttribute="centerX" id="YJ3-KO-HDD"/>
                                                             <constraint firstAttribute="bottom" secondItem="xsB-sp-PeG" secondAttribute="bottom" id="cb8-bO-kL9"/>
                                                         </constraints>
                                                     </view>

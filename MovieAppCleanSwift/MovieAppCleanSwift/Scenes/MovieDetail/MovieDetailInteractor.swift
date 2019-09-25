@@ -37,8 +37,8 @@ class MovieDetailInteractor: MovieDetailInteractorInterface {
           self?.presenter.presentMovieDetail(response: response)
         case .failure(let error):
           let error = error.localizedDescription
-          let response = MovieDetail.GetMovieDetail.Response.HandleError(error: error)
-          self?.presenter.presentHandleError(response: response)
+//          let response = MovieDetail.GetMovieDetail.Response.HandleError(error: error)
+//          self?.presenter.presentHandleError(response: response)
           print("error: \(error)")
         }
       }

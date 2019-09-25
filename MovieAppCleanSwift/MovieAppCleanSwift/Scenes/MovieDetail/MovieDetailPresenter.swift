@@ -11,7 +11,7 @@ import UIKit
 protocol MovieDetailPresenterInterface {
   func presentMovieDetail(response: MovieDetail.GetMovieDetail.Response)
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response)
-  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError)
+//  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError)
 }
 
 class MovieDetailPresenter: MovieDetailPresenterInterface {
@@ -53,10 +53,10 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
     viewController.displayMovieDetail(viewModel: viewModel)
   }
   
-  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError) {
-    let viewModel = MovieDetail.GetMovieDetail.ViewModel.HandleError(errorMessage: response.error)
-    viewController.displayHandleErrorAlert(viewModel: viewModel)
-  }
+//  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError) {
+//    let viewModel = MovieDetail.GetMovieDetail.ViewModel.HandleError(errorMessage: response.error)
+//    viewController.displayHandleErrorAlert(viewModel: viewModel)
+//  }
   
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response) {
     let viewModel = MovieDetail.SetUserVoting.ViewModel()

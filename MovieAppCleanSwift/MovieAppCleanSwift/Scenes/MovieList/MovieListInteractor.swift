@@ -12,14 +12,12 @@ protocol MovieListInteractorInterface {
   func getMovies(request: MovieList.GetMovie.Request)
   func setIdMovie(request: MovieList.SetIdMovie.Request)
   var id: Int? { get }
-  var error: String { get }
 }
 
 class MovieListInteractor: MovieListInteractorInterface {
   
   var presenter: MovieListPresenterInterface!
   var worker: MovieListWorker?
-  var error: String = ""
   var page: Int = 1
   var id: Int?
   
@@ -34,12 +32,14 @@ class MovieListInteractor: MovieListInteractorInterface {
     worker?.getMovies(page: page, sort: request.sort) { result in
       switch result {
       case .success(let listMovie):
-        let response = MovieList.GetMovie.Response(listMovies: listMovie.results)
+        let movies: [Movie] = listMovie.results
+        let response = MovieList.GetMovie.Response(result: .success(movies))
         self.presenter.presentMovieList(response: response)
         self.page += 1
         print("page: \(self.page)")
       case .failure(let error):
-        self.error = error.localizedDescription
+        let response = MovieList.GetMovie.Response(result: .failure(error))
+        self.presenter.presentMovieList(response: response)
       }
     }
   }
