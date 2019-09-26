@@ -59,7 +59,9 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
 //  }
   
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response) {
-    let viewModel = MovieDetail.SetUserVoting.ViewModel()
+    let id = response.id
+    let voteAverage = response.voteAverage
+    let viewModel = MovieDetail.SetUserVoting.ViewModel(id: id, voteAverage: voteAverage)
     viewController.displayUserVoting(viewModel: viewModel)
   }
   

@@ -11,19 +11,13 @@ import UIKit
 protocol MovieDetailInteractorInterface {
   func getMovieDetail(request: MovieDetail.GetMovieDetail.Request)
   func setUserVoting(request: MovieDetail.SetUserVoting.Request)
-  var delegate: ReloadTable? { get set }
   var id: Int? { get set }
-}
-
-protocol ReloadTable: class {
-  func reloadTable(id: Int, voteAverage: Double)
 }
 
 class MovieDetailInteractor: MovieDetailInteractorInterface {
   
   var presenter: MovieDetailPresenterInterface!
   var worker: MovieDetailWorker?
-  var delegate: ReloadTable?
   var id: Int?
   
   // MARK: - Business logic
@@ -57,9 +51,7 @@ class MovieDetailInteractor: MovieDetailInteractorInterface {
     let multiplier = pow(10.0, 2.0)
     let roundedVoteAverage = round(voteAverage * multiplier) / multiplier
     
-    delegate?.reloadTable(id: id, voteAverage: roundedVoteAverage)
-    
-    let response = MovieDetail.SetUserVoting.Response()
+    let response = MovieDetail.SetUserVoting.Response(id: id, voteAverage: roundedVoteAverage)
     presenter.presentUserVoting(response: response)
   }
   

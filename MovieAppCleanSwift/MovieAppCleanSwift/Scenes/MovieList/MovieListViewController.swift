@@ -11,13 +11,13 @@ import UIKit
 protocol MovieListViewControllerInterface: class {
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel)
   func displayIdMovie(viewModel: MovieList.SetIdMovie.ViewModel)
-//  func displayHandleErrorAlert(viewModel: MovieList.GetMovie.ViewModel.HandleError)
+  func displayUpdateVoteAverage(viewModel: MovieList.UpdateVoteAverage.ViewModel)
 }
 
 class MovieListViewController: UIViewController, MovieListViewControllerInterface {
   var interactor: MovieListInteractorInterface!
   var router: MovieListRouter!
-  var movieViewModel: [MovieList.GetMovie.ViewModel.MovieViewModel] = []
+  var movieViewModel: [MovieList.MovieViewModel] = []
   var flag: String = Flag.loadmore.rawValue
   var sort: String = Sort.desc.rawValue
   
@@ -110,13 +110,13 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
   // MARK: - Display logic
 
   func displayMovies(viewModel: MovieList.GetMovie.ViewModel) {
-    let result = viewModel.viewModel
+    let result = viewModel.movies
     switch result {
     case .success(let listMovie):
       self.movieViewModel.append(contentsOf: listMovie)
       tableView.reloadData()
     case .failure(let error):
-      displayHandleErrorAlert(error: error.errorMessage)
+      displayHandleErrorAlert(error: error)
     }
   }
   
@@ -124,8 +124,17 @@ class MovieListViewController: UIViewController, MovieListViewControllerInterfac
     router.navigateToMovieDetail()
   }
   
-  func displayHandleErrorAlert(error: String) {
-    let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+  func displayUpdateVoteAverage(viewModel: MovieList.UpdateVoteAverage.ViewModel) {
+    for (index, value) in movieViewModel.enumerated() {
+      if viewModel.movieCell.id == value.id {
+        movieViewModel[index].voteAverage = viewModel.movieCell.voteAverage
+      }
+    }
+    tableView.reloadData()
+  }
+  
+  func displayHandleErrorAlert(error: Error) {
+    let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action) in
       self.dismiss(animated: true, completion: nil)
     }))
@@ -170,6 +179,9 @@ extension MovieListViewController: UITableViewDelegate {
 
 extension MovieListViewController: ReloadTable {
   func reloadTable(id: Int, voteAverage: Double) {
+    let request = MovieList.UpdateVoteAverage.Request(id: id, voteAverage: voteAverage)
+    interactor.updateVoteAverage(request: request)
+    
     for (index, value) in movieViewModel.enumerated() {
       if id == value.id {
         movieViewModel[index].voteAverage = voteAverage

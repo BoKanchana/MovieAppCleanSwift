@@ -25,7 +25,7 @@ class MovieListTableViewCell: UITableViewCell {
     super.setSelected(selected, animated: animated)
   }
   
-  func setupUI(viewModel: MovieList.GetMovie.ViewModel.MovieViewModel) {
+  func setupUI(viewModel: MovieList.MovieViewModel) {
     let baseUrl: String = "https://image.tmdb.org/t/p/original"
     
     titleLabel.text = viewModel.title

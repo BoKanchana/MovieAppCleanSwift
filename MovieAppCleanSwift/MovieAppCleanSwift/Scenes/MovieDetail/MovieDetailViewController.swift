@@ -12,7 +12,12 @@ import Cosmos
 protocol MovieDetailViewControllerInterface: class {
   func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel)
   func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel)
+  var delegate: ReloadTable? { get set }
 //  func displayHandleErrorAlert(viewModel: MovieDetail.GetMovieDetail.ViewModel.HandleError)
+}
+
+protocol ReloadTable: class {
+  func reloadTable(id: Int, voteAverage: Double)
 }
 
 
@@ -23,6 +28,7 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   var vote: Double?
   var movieDetailViewModel: MovieDetail.GetMovieDetail.ViewModel?
   let baseUrl: String = "https://image.tmdb.org/t/p/original"
+  var delegate: ReloadTable?
   @IBOutlet weak var posterImage: UIImageView!
   @IBOutlet weak var titleLabel: UILabel!
   @IBOutlet weak var overviewLabel: UILabel!
@@ -112,7 +118,7 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   }
   
   func displayUserVoting(viewModel: MovieDetail.SetUserVoting.ViewModel) {
-    
+    delegate?.reloadTable(id: viewModel.id, voteAverage: viewModel.voteAverage)
   }
   
 //  func displayHandleErrorAlert(viewModel: MovieDetail.GetMovieDetail.ViewModel) {
