@@ -13,7 +13,7 @@ class MovieListPresenterTests: XCTestCase {
   
   // MARK: - Subject Under Test
   
-  var sut: MovieListPresenter!
+  var presenter: MovieListPresenter!
   var movieListPresenterOutputSpy: MovieListPresenterOutputSpy!
   
   // MARK: - Test lifecycle
@@ -54,13 +54,15 @@ class MovieListPresenterTests: XCTestCase {
   // MARK: - Test setup
   
   func setupMovieListPresenter() {
-    sut = MovieListPresenter()
+    presenter = MovieListPresenter()
     movieListPresenterOutputSpy = MovieListPresenterOutputSpy()
   }
   
+  // MARK: - Tests
+  
   func testPresentMovieShouldAskViewControllerToDisplayMoviesWithSuccess() {
     // given
-    sut.viewController = movieListPresenterOutputSpy
+    presenter.viewController = movieListPresenterOutputSpy
     
     // when
     let movie = Movie(popularity: 2.0,
@@ -78,7 +80,7 @@ class MovieListPresenterTests: XCTestCase {
                       overview: "Test Movie",
                       posterPath: "/1234.jpg")
     let response = MovieList.GetMovie.Response(result: .success([movie]))
-    sut.presentMovieList(response: response)
+    presenter.presentMovieList(response: response)
     
     // then
     XCTAssert(movieListPresenterOutputSpy.displayMovieCalled)
@@ -102,11 +104,11 @@ class MovieListPresenterTests: XCTestCase {
   
   func testPresentMovieShouldAskViewControllerToDisplayMoviesWithFailed() {
     // given
-    sut.viewController = movieListPresenterOutputSpy
+    presenter.viewController = movieListPresenterOutputSpy
     
     // when
     let response = MovieList.GetMovie.Response(result: .failure(.invalidData))
-    sut.presentMovieList(response: response)
+    presenter.presentMovieList(response: response)
     
     // then
     XCTAssert(movieListPresenterOutputSpy.displayMovieCalled)
@@ -125,11 +127,11 @@ class MovieListPresenterTests: XCTestCase {
   
   func testSetIdMovieIsCalled() {
     // given
-    sut.viewController = movieListPresenterOutputSpy
+    presenter.viewController = movieListPresenterOutputSpy
     
     // when
     let response = MovieList.SetIdMovie.Response()
-    sut.setIdMovie(response: response)
+    presenter.setIdMovie(response: response)
     
     // then
     XCTAssert(movieListPresenterOutputSpy.displayIdMovieCalled, "Set id movie is called")
@@ -137,7 +139,7 @@ class MovieListPresenterTests: XCTestCase {
   
   func testUpdateVoteAverageShouldcal() {
     // given
-    sut.viewController = movieListPresenterOutputSpy
+    presenter.viewController = movieListPresenterOutputSpy
     
     // when
     let cell = Movie(popularity: 2.0,
@@ -154,7 +156,7 @@ class MovieListPresenterTests: XCTestCase {
                      adult: true,
                      overview: "Test Movie",
                      posterPath: "/test.jpg")
-    sut.updateVoteAverage(response: MovieList.UpdateVoteAverage.Response(movieCell: cell))
+    presenter.updateVoteAverage(response: MovieList.UpdateVoteAverage.Response(movieCell: cell))
     
     //Then
     XCTAssert(movieListPresenterOutputSpy.displayUpdateVoteAverageCalled)

@@ -60,7 +60,6 @@ class MovieListInteractor: MovieListInteractorInterface {
       let response = MovieList.UpdateVoteAverage.Response(movieCell: movie)
       presenter.updateVoteAverage(response: response)
     }
-    
   }
   
 }
