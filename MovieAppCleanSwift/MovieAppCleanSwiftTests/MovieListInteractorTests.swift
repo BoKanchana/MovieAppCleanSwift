@@ -47,10 +47,13 @@ class MovieListInteractorTests: XCTestCase {
   class MovieListWorkerOutputSpy: MovieListWorker {
     var workerGetMoviesCalled = false
     var isSuccess = false
+    var workerGetMoviesSuccessCalled = false
+    var workerGetMoviesFailCalled = false
     
     override func getMovies(page: Int, sort: String, _ completion: @escaping (Result<ListMovie, APIError>) -> Void) {
       workerGetMoviesCalled = true
       if isSuccess {
+        
         let movie = Movie(popularity: 0,
                           id: 0,
                           video: true,
@@ -69,8 +72,10 @@ class MovieListInteractorTests: XCTestCase {
                                                                  totalResults: 10000,
                                                                  totalPages: 500,
                                                                  results: [movie])))
+        workerGetMoviesSuccessCalled = true
       } else {
         completion(Result<ListMovie, APIError>.failure(.invalidData))
+        workerGetMoviesFailCalled = true
       }
     }
   }
@@ -78,6 +83,8 @@ class MovieListInteractorTests: XCTestCase {
   override func setUp() {
     super.setUp()
     setupMovieListInteractor()
+    interactor.presenter = movieListInteractorOutputSpy
+    interactor.worker = movieListWorkerOutputSpy
   }
   
   override func tearDown() {
@@ -96,26 +103,36 @@ class MovieListInteractorTests: XCTestCase {
   
   func testGetMoviesWithFlagLoadMoreShouldAskPresenterToPresentMoviesWithSuccess() {
     // given
-    interactor.presenter = movieListInteractorOutputSpy
-    interactor.worker = movieListWorkerOutputSpy
     movieListWorkerOutputSpy.isSuccess = true
+    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "loadmore")
     
     // when
-    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "loadmore")
     interactor.getMovies(request: request)
     
     // then
     XCTAssert(movieListInteractorOutputSpy.presentMovieListCalled)
     XCTAssert(movieListWorkerOutputSpy.workerGetMoviesCalled)
+    XCTAssert(movieListWorkerOutputSpy.workerGetMoviesSuccessCalled)
   }
   
   func testGetMoviesWithFlagLoadMoreShouldAskPresenterToPresentMoviesWithFail() {
     // given
-    interactor.presenter = movieListInteractorOutputSpy
-    interactor.worker = movieListWorkerOutputSpy
+    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "loadmore")
     
     // when
-    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "loadmore")
+    interactor.getMovies(request: request)
+    
+    // then
+    XCTAssert(movieListInteractorOutputSpy.presentMovieListCalled)
+    XCTAssert(movieListWorkerOutputSpy.workerGetMoviesCalled)
+    XCTAssert(movieListWorkerOutputSpy.workerGetMoviesFailCalled)
+  }
+  
+  func testGetMoviesWithFlagRefreshShouldAskPresenterToPresentMoviesWithSuccess() {
+    // given
+    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "refresh")
+    
+    // when
     interactor.getMovies(request: request)
     
     // then
@@ -123,18 +140,14 @@ class MovieListInteractorTests: XCTestCase {
     XCTAssert(movieListWorkerOutputSpy.workerGetMoviesCalled)
   }
   
-  func testGetMoviesWithFlagRefreshShouldAskPresenterToPresentMoviesWithSuccess() {
+  func testGetMoviesWithSortAcescendingShouldAskPresenterToPresentMoviesWithSuccess() {
     // given
-    interactor.presenter = movieListInteractorOutputSpy
-    interactor.worker = movieListWorkerOutputSpy
+    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "loadmore")
     
     // when
-    let request = MovieList.GetMovie.Request(sort: "release_date.desc", flag: "refresh")
     interactor.getMovies(request: request)
     
-    // then
-    XCTAssert(movieListInteractorOutputSpy.presentMovieListCalled)
-    XCTAssert(movieListWorkerOutputSpy.workerGetMoviesCalled)
+    //
   }
   
   func testSetIdMovieIsCalled() {
@@ -151,8 +164,20 @@ class MovieListInteractorTests: XCTestCase {
   
   func testUpdateVoteAverage() {
     // given
-    interactor.presenter = movieListInteractorOutputSpy
-    interactor.movies = [Movie(popularity: 1, id: 1, video: true, voteCount: 1, voteAverage: 1, title: "Test", releaseDate: "Test", originalLanguage: "Test", originalTitle: "Test", genreIds: [1, 2, 3], backdropPath: "/Test.jpg", adult: true, overview: "Test", posterPath: "/Test.jpg")]
+    interactor.movies = [Movie(popularity: 1,
+                               id: 1,
+                               video: true,
+                               voteCount: 1,
+                               voteAverage: 1,
+                               title: "Test",
+                               releaseDate: "Test",
+                               originalLanguage: "Test",
+                               originalTitle: "Test",
+                               genreIds: [1, 2, 3],
+                               backdropPath: "/Test.jpg",
+                               adult: true,
+                               overview: "Test",
+                               posterPath: "/Test.jpg")]
     
     // when
     let request = MovieList.UpdateVoteAverage.Request(id: 1, voteAverage: 1)
