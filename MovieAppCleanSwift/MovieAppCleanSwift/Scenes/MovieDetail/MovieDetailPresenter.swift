@@ -11,7 +11,6 @@ import UIKit
 protocol MovieDetailPresenterInterface {
   func presentMovieDetail(response: MovieDetail.GetMovieDetail.Response)
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response)
-//  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError)
 }
 
 class MovieDetailPresenter: MovieDetailPresenterInterface {
