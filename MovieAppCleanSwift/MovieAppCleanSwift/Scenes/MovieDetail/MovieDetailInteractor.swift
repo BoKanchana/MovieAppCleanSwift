@@ -46,7 +46,7 @@ class MovieDetailInteractor: MovieDetailInteractorInterface {
     UserDefaults.standard.set(voting, forKey: "\(id)")
     
     let voteAverage = ((voteCount * voteAverageApi) + voting) / (voteCount + 1)
-    let multiplier = pow(10.0, 2.0)
+    let multiplier = 100.0
     let roundedVoteAverage = round(voteAverage * multiplier) / multiplier
     
     let response = MovieDetail.SetUserVoting.Response(id: id, voteAverage: roundedVoteAverage)
