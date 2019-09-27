@@ -10,31 +10,28 @@ import UIKit
 
 struct MovieDetail {
   
+  struct MovieDetailViewModel {
+    var id: Int
+    var title: String
+    var overview: String
+    var originalLanguage: String
+    var voteAverage: Double
+    var collection: String
+    var posterPath: String
+    var voteCount: Double
+    var voteAverageApi: Double
+  }
+  
   struct GetMovieDetail {
     
     struct Request {
       
     }
     struct Response {
-      var movieDetail: MovieDescription
-      struct HandleError {
-        var error: String
-      }
+      let result: Result<MovieDescription, APIError>
     }
     struct ViewModel {
-      var id: Int
-      var title: String
-      var overview: String
-      var originalLanguage: String
-      var voteAverage: Double
-      var collection: String
-      var posterPath: String
-      var voteCount: Double
-      var voteAverageApi: Double
-      
-      struct HandleError {
-        var errorMessage: String
-      }
+      let movie: Result<MovieDetailViewModel, APIError>
     }
   }
   

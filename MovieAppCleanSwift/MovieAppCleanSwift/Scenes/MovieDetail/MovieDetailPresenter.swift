@@ -22,41 +22,41 @@ class MovieDetailPresenter: MovieDetailPresenterInterface {
   // MARK: - Presentation logic
   
   func presentMovieDetail(response: MovieDetail.GetMovieDetail.Response) {
-    let movie = response.movieDetail
-    
-    let id = movie.id
-    let title = movie.title
-    let overview = movie.overview
-    let originalLanguage = movie.originalLanguage ?? " - "
-    let posterPath = movie.posterPath ??  " - "
-    let voteCount = movie.voteCount
-    let voteAverageApi = movie.voteAverage
-    let collection = movie.genres.map { $0.name }.joined(separator: ", ")
-    
-    let voteAverage: Double
-    let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
-    if avg == 0 {
-      voteAverage = 0
-    } else {
-      voteAverage = avg / 2
+    switch response.result {
+    case .success(let movie):
+      let id = movie.id
+      let title = movie.title
+      let overview = movie.overview
+      let originalLanguage = movie.originalLanguage ?? " - "
+      let posterPath = movie.posterPath ??  " - "
+      let voteCount = movie.voteCount
+      let voteAverageApi = movie.voteAverage
+      let collection = movie.genres.map { $0.name }.joined(separator: ", ")
+      
+      let voteAverage: Double
+      let avg = UserDefaults.standard.double(forKey: "\(movie.id)")
+      if avg == 0 {
+        voteAverage = 0
+      } else {
+        voteAverage = avg / 2
+      }
+      let movieDetailViewModel = MovieDetail.MovieDetailViewModel(id: id,
+                                                           title: title,
+                                                           overview: overview,
+                                                           originalLanguage: originalLanguage,
+                                                           voteAverage: voteAverage,
+                                                           collection: collection,
+                                                           posterPath: posterPath,
+                                                           voteCount: voteCount,
+                                                           voteAverageApi: voteAverageApi)
+      
+      let viewModel = MovieDetail.GetMovieDetail.ViewModel(movie: .success(movieDetailViewModel))
+      viewController.displayMovieDetail(viewModel: viewModel)
+    case .failure(let error):
+      let viewModel = MovieDetail.GetMovieDetail.ViewModel(movie: .failure(error))
+      viewController.displayMovieDetail(viewModel: viewModel)
     }
-    
-    let viewModel = MovieDetail.GetMovieDetail.ViewModel(id: id,
-                                                         title: title,
-                                                         overview: overview,
-                                                         originalLanguage: originalLanguage,
-                                                         voteAverage: voteAverage,
-                                                         collection: collection,
-                                                         posterPath: posterPath,
-                                                         voteCount: voteCount,
-                                                         voteAverageApi: voteAverageApi)
-    viewController.displayMovieDetail(viewModel: viewModel)
   }
-  
-//  func presentHandleError(response: MovieDetail.GetMovieDetail.Response.HandleError) {
-//    let viewModel = MovieDetail.GetMovieDetail.ViewModel.HandleError(errorMessage: response.error)
-//    viewController.displayHandleErrorAlert(viewModel: viewModel)
-//  }
   
   func presentUserVoting(response: MovieDetail.SetUserVoting.Response) {
     let id = response.id

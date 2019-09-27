@@ -26,7 +26,7 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   var interactor: MovieDetailInteractorInterface!
   var router: MovieDetailRouter!
   var vote: Double?
-  var movieDetailViewModel: MovieDetail.GetMovieDetail.ViewModel?
+  var movieDetailViewModel: MovieDetail.MovieDetailViewModel?
   let baseUrl: String = "https://image.tmdb.org/t/p/original"
   var delegate: ReloadTable?
   @IBOutlet weak var posterImage: UIImageView!
@@ -92,17 +92,24 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
   // MARK: - Display logic
 
   func displayMovieDetail(viewModel: MovieDetail.GetMovieDetail.ViewModel) {
-    self.movieDetailViewModel = viewModel
-    
-    let posterPath = viewModel.posterPath
-    let posterURL = URL(string: "\(baseUrl)\(posterPath)")
-    
-    posterImage.kf.setImage(with: posterURL)
-    titleLabel.text = viewModel.title
-    overviewLabel.text = viewModel.overview
-    languageLabel.text = viewModel.originalLanguage
-    genreLabel.text = viewModel.collection
-    starVotingView.rating = viewModel.voteAverage
+    switch viewModel.movie {
+    case .success(let viewModel):
+      
+      self.movieDetailViewModel = viewModel
+      
+      let posterPath = viewModel.posterPath
+      let posterURL = URL(string: "\(baseUrl)\(posterPath)")
+      
+      posterImage.kf.setImage(with: posterURL)
+      titleLabel.text = viewModel.title
+      overviewLabel.text = viewModel.overview
+      languageLabel.text = viewModel.originalLanguage
+      genreLabel.text = viewModel.collection
+      starVotingView.rating = viewModel.voteAverage
+    case .failure(let error):
+      let errorMessage = error.localizedDescription
+      displayHandleErrorAlert(error: errorMessage)
+    }
     
     setStarforVoting()
   }
@@ -121,13 +128,13 @@ class MovieDetailViewController: UIViewController, MovieDetailViewControllerInte
     delegate?.reloadTable(id: viewModel.id, voteAverage: viewModel.voteAverage)
   }
   
-//  func displayHandleErrorAlert(viewModel: MovieDetail.GetMovieDetail.ViewModel) {
-//    let alert = UIAlertController(title: "Error", message: viewModel.errorMessage, preferredStyle: .alert)
-//    alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action) in
-//      self.dismiss(animated: true, completion: nil)
-//    }))
-//    self.present(alert, animated: true)
-//  }
+  func displayHandleErrorAlert(error: String) {
+    let alert = UIAlertController(title: "Error", message: error, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "Close", style: .default, handler: { (action) in
+      self.dismiss(animated: true, completion: nil)
+    }))
+    self.present(alert, animated: true)
+  }
 
   // MARK: - Router
 
